@@ -90,7 +90,7 @@ class DtmfPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
 
-        val streamType = AudioManager.STREAM_DTMF
+        val streamType = AudioManager.STREAM_MUSIC // Use STREAM_MUSIC for DTMF tones
 
         var maxVolume = audioManager.getStreamMaxVolume(streamType)
         if (forceMaxVolume) {

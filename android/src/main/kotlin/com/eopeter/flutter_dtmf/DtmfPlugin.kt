@@ -47,13 +47,15 @@ class DtmfPlugin : FlutterPlugin, MethodCallHandler {
             val volume = arguments?.get("volume") as Double
             val ignoreDtmfSystemSettings = arguments?.get("ignoreDtmfSystemSettings") as Boolean
             val forceMaxVolume = arguments?.get("forceMaxVolume") as Boolean
+            val forceVolume = arguments?.get("forceVolume") as? Int
             if (digits != null) {
                 playTone(
                     digits.trim(),
                     durationMs as Int,
                     volume,
                     ignoreDtmfSystemSettings,
-                    forceMaxVolume
+                    forceMaxVolume,
+                    forceVolume
                 )
                 result.success(true)
             }
@@ -67,7 +69,8 @@ class DtmfPlugin : FlutterPlugin, MethodCallHandler {
         durationMs: Int,
         volume: Double,
         ignoreDtmfSystemSettings: Boolean,
-        forceMaxVolume: Boolean
+        forceMaxVolume: Boolean,
+        forceVolume: Int? = null
     ) {
 
         if (!ignoreDtmfSystemSettings) {
@@ -90,18 +93,25 @@ class DtmfPlugin : FlutterPlugin, MethodCallHandler {
             }
         }
 
-        val streamType = AudioManager.STREAM_DTMF
+        val streamType = AudioManager.STREAM_DTMF // Use STREAM_MUSIC for DTMF tones
 
-        var maxVolume = audioManager.getStreamMaxVolume(streamType)
+        var maxStreamVolume = audioManager.getStreamMaxVolume(streamType)
+        var maxVolume = maxStreamVolume
         if (forceMaxVolume) {
             maxVolume = 100
+        } else if (forceVolume != null && forceVolume > 0 && forceVolume <= 100) {
+            maxVolume = forceVolume
         }
         // Set the volume level as a percentage
         var targetVolume = volume * maxVolume
         audioManager.setStreamVolume(streamType, targetVolume.toInt(), 0)
         // Adjust volume using AudioManager
         var toneGenerator = ToneGenerator(streamType, targetVolume.toInt())
-
+        Log.i(
+            "DTMFPlugin",
+            "forceVolume:$forceVolume maxStreamVolume:$maxStreamVolume " +
+                    "targetVolume:$targetVolume maxVolume:$maxVolume forceMaxVolume:$forceMaxVolume"
+        )
 
         Thread(object : Runnable {
             override fun run() {

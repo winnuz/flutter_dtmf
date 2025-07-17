@@ -35,7 +35,8 @@ class _MyAppState extends State<MyApp> {
                 durationMs: 160,
                 volume: 0.8,
                 ignoreDtmfSystemSettings:true,
-            forceMaxVolume: true);
+            forceMaxVolume: true,
+                forceVolume : 0);
           },
         )),
       ),

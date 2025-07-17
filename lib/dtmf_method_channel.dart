@@ -21,14 +21,16 @@ class MethodChannelDtmf extends DtmfPlatform {
       double samplingRate=500,
       double volume=1,
       bool ignoreDtmfSystemSettings = false,
-      bool forceMaxVolume = false}) async {
+      bool forceMaxVolume = false,
+      int forceVolume = 0}) async {
     final Map<String, Object?> args = <String, dynamic>{
       "digits": digits,
       "samplingRate": samplingRate,
       "durationMs": durationMs,
       "volume": volume,
       "ignoreDtmfSystemSettings":ignoreDtmfSystemSettings,
-      "forceMaxVolume":forceMaxVolume
+      "forceMaxVolume":forceMaxVolume,
+      "forceVolume":forceVolume,
     };
     return await methodChannel.invokeMethod('playTone', args);
   }

@@ -31,7 +31,8 @@ abstract class DtmfPlatform extends PlatformInterface {
       double samplingRate=500,
       double volume=1,
       bool ignoreDtmfSystemSettings = false,
-      bool forceMaxVolume = false}) {
+      bool forceMaxVolume = false,
+      int forceVolume = 0}) {
     throw UnimplementedError('playTone() has not been implemented.');
   }
 }
